@@ -1,0 +1,33 @@
+---
+- name: Create a user for opsschool usage
+  user:
+    name: opsschool
+    password: "{{ opschool_pass }}"
+    state: present
+    shell: /bin/bash      
+    system: no             
+    createhome: yes        
+    home: /home/opsschool  
+    
+- name: Install EPEL repo.
+  yum:
+    name: https://dl.fedoraproject.org/pub/epel/epel-release-latest-{{ ansible_distribution_major_version }}.noarch.rpm
+    state: present
+
+- name: Import EPEL GPG key.
+  rpm_key:
+    key: /etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-{{ ansible_distribution_major_version }}
+    state: present
+    
+- name: install ntp
+  yum:
+    name: ntp
+
+- name: Create config file for ntp
+  template:
+    src: ntp.conf.j2
+    owner: root
+    mode: "0644"
+    dest: "/etc/ntp/ntp.conf"
+  notify:
+  - restart ntp

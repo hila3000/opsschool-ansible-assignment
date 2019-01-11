@@ -1,2 +1,2 @@
-[web]
-server1_ip_or_hostname
+[db]
+hostname_or_ip_here

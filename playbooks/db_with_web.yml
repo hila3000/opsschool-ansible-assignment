@@ -1,0 +1,11 @@
+---
+- hosts: "{{ hosts_group }}"
+  remote_user: "{{ remote_user }}"
+  become: true
+  vars:
+    remote_user: centos
+        
+  roles:
+    - common
+    - db
+    - webserver

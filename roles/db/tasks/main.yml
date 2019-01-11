@@ -1,0 +1,25 @@
+---
+- name: Add MySQL yum repository
+  yum:
+    name: https://dev.mysql.com/get/{{ mysql_community_edition }}.noarch.rpm
+    state: present
+
+- name: Install mysql server.
+  yum:
+    name: mysql-server
+    state: present
+  notify:
+  - restart mysqld
+
+- name: disable selinux
+  selinux:
+    state: disabled
+      
+- name: add innodb_buffer_pool_size to my.cnf
+  blockinfile:
+    path: /etc/my.cnf
+    block: | 
+      innodb_buffer_pool_size={{(ansible_memtotal_mb * 0.6)|round|int}}M
+  notify:
+  - restart mysqld
+
